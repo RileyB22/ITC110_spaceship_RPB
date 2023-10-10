@@ -74,7 +74,7 @@ public class BadGuyBrain : MonoBehaviour
     public void Despawn()
     {
         GameObject.Find("GameManager").GetComponent<GameManager>().Score = pointVal;
-        GameObject.Find("GameManager").GetComponent<GameManager>().CurrentScore = pointVal;
+      
         Destroy(this.gameObject);
     }
 }

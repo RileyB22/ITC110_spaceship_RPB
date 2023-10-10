@@ -26,4 +26,5 @@ public class Build_A_Baddie : MonoBehaviour
         badGuyBrain.player.GetComponent<CharacterBrain>().health--;
         badGuyBrain.Despawn();
     }
+
 }

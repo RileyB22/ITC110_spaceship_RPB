@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField]private int PlayerScore = 0;
-    public int Score { 
+    [SerializeField] private int PlayerScore = 0;
+    public int Score
+    {
         get { return PlayerScore; }
         set
         {
@@ -15,14 +15,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private int currentScore = 0;
-
-    public int CurrentScore
-    {
-        set { currentScore += value; }
-    }
-
-    [SerializeField]private int Level = 1;
+    [SerializeField] private int Level = 1;
     public int Lvl
     {
         get { return Level; }
@@ -38,39 +31,28 @@ public class GameManager : MonoBehaviour
     //GameOver screen elements
     public TextMeshProUGUI highScoreText, maxlevelText;
 
-    public bool OnLevel = true;
-    
     void Start()
     {
         ActiveEnemies = new List<GameObject>();
         gameManager = this;
     }
 
-    void Update()
+    public static void FlushEnemy(GameObject enemy)
     {
-        if (currentScore >= Spawner.spawner.entitiesToSpawn[Level].GetComponent<BadGuyBrain>().pointVal * Spawner.spawner.currSpawnManagerValues.prefabsToSpawn[Level])
-        {
-            currentScore = 0;
-            LevelUp();
-        }
-    }
-
-    public static void FlushEnemy(GameObject enemy){
         ActiveEnemies.Remove(enemy);
         Destroy(enemy);
     }
 
     private void LevelUp()
     {
-        Spawner.SetSpawnManagerVals(Level++);
+        Spawner.SetSpawnManagerVals(++Level);
         Spawner.Spawn();
     }
 
     public static void OnDeath()
     {
-        Time.timeScale = 0.0f;
         ActiveEnemies.Clear();
-        if(gameManager.Score > PlayerPrefs.GetInt("HighScore"))
+        if (gameManager.Score > PlayerPrefs.GetInt("HighScore"))
         {
             PlayerPrefs.SetInt("HighScore", gameManager.Score);
         }

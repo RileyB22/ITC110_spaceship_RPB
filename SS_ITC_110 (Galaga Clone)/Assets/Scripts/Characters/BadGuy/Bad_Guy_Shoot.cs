@@ -1,49 +1,44 @@
 using System.Collections;
 using UnityEngine;
 
-public class Shoot : MonoBehaviour
+public class Bad_Guy_Shoot : MonoBehaviour
 {
     public GameObject bullet;
     public GameObject firePoint;
-    
+    public float timing = 1.0f;
     public float bulletForce = 1500.0f;
 
     [SerializeField] private Movement locMoveRef;
 
     [SerializeField] private bool canShoot = true;
-    
+
     void Start()
     {
         locMoveRef = GetComponent<Movement>();
+        StartCoroutine(ShootTimer(timing));
     }
-    
-    void Update()
+
+
+    public IEnumerator ShootTimer(float timeBetweenShots)
     {
-        if (Input.GetKeyDown(KeyCode.E) && canShoot)
-        {
-            StartCoroutine(ShootObject());
-        }
+        yield return new WaitForSeconds(timeBetweenShots);
+        StartCoroutine(ShootObject());
+        StartCoroutine(ShootTimer(timeBetweenShots));
     }
 
     public IEnumerator ShootObject()
     {
         canShoot = true;
-        
+
         GameObject newBullet = Instantiate(bullet, firePoint.transform.position, firePoint.transform.rotation) as GameObject;
 
         // get Rigidbody2D component of instantiated Bullet and control
         Rigidbody2D tempRigidBody = newBullet.GetComponent<Rigidbody2D>();
 
         // push the Bullet forward by amount bulletForce
-        if (locMoveRef.FacingUp)
-        {
+        
             // fireForward is fire to the right
-            tempRigidBody.AddForce(-transform.up * bulletForce);
-        }else
-        {
-            // fire left, a.k.a. "negative right"
-            tempRigidBody.AddForce(transform.up * bulletForce);
-        }
+        tempRigidBody.AddForce(-transform.up * bulletForce);
 
         yield return new WaitForSeconds(1.0f);
 
